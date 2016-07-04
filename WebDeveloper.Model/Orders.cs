@@ -11,11 +11,18 @@ namespace WebDeveloper.Model
         [Key]
         public int OrderID { get; set; }
 
-        [StringLength(5)]
-        public string CustomerID { get; set; }
+        //[StringLength(5)]
+        //public string CustomerID { get; set; }
 
+        [Required]
+        [Display(Name = "Customer Name")]
+        public int? CustomerID { get; set; }
+
+        [Required]
+        [Display(Name = "Employee Name")]
         public int? EmployeeID { get; set; }
 
+        [Required]
         public DateTime? OrderDate { get; set; }
 
         public DateTime? RequiredDate { get; set; }
@@ -24,7 +31,9 @@ namespace WebDeveloper.Model
 
         public int? ShipVia { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
+        [Display(Name = "Freight")]
         public decimal? Freight { get; set; }
 
         [StringLength(40)]

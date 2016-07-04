@@ -14,14 +14,16 @@ namespace WebDeveloper.Model
         }
 
         [Key]
-        [StringLength(5)]
-        public string CustomerID { get; set; }
+        [Required]
+        public int CustomerID { get; set; }
 
         [Required]
         [StringLength(40)]
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
         [StringLength(30)]
+        [Display(Name = "Contact Name")]
         public string ContactName { get; set; }
 
         [StringLength(30)]
