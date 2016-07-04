@@ -27,11 +27,17 @@ namespace WebDeveloper.Model
         [Display(Name = "Category Description")]
         public string Description { get; set; }
 
-        [Column(TypeName = "image")]
+        //[Column(TypeName = "image")]
         [Display(Name = "Image")]
         public byte[] Picture { get; set; }
 
+        [ScaffoldColumn(false)]
+        [MaxLength(50)]
+        public string PictureFileName { get; set; }
 
+        [ScaffoldColumn(false)]
+        [MaxLength(50)]
+        public string PictureContentType { get; set; }
         public virtual ICollection<Products> Products { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using WebDeveloper.Model;
 using WebDeveloper.DataAccess;
+using System.Web;
 
 namespace WebDeveloper.Controllers
 {
@@ -9,6 +10,14 @@ namespace WebDeveloper.Controllers
     {
 
         private CategorieData _categorie = new CategorieData();
+
+
+        public FileContentResult GetImage(int id)
+        {
+            var categorie = _categorie.GetCategorytById(id);
+            if (categorie != null) return File(categorie.Picture, categorie.PictureContentType);
+            else return null;
+        }
 
         // GET: Categorie
         public ActionResult Index()
@@ -21,10 +30,17 @@ namespace WebDeveloper.Controllers
             return View(new Categories());
         }
         [HttpPost]
-        public ActionResult Create(Categories categorie)
+        public ActionResult Create(Categories categorie, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
+                if(image != null)
+                {
+                    categorie.PictureContentType = image.ContentType;
+                    categorie.PictureFileName = image.FileName;
+                    categorie.Picture = new byte[image.ContentLength];
+                    image.InputStream.Read(categorie.Picture, 0, image.ContentLength);
+                }
                 _categorie.Add(categorie);
                 return RedirectToAction("Index");
             }
