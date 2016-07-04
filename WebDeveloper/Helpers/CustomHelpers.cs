@@ -36,5 +36,14 @@ namespace WebDeveloper.Helpers
         {
             return new CustomerData().GetList();
         }
+
+        //public static IHtmlString DisplayImageExtension(this HtmlHelper helper)
+        //{
+        //    return new HtmlString(GetHtmlImage(date));
+        //}
+        //private static string GetHtmlImage(DateTime? date)
+        //{
+        //    return $"<img width='100' height='100' src='@Url.Action("GetImage", "Categorie", new { id = item.CategoryID })' />";
+        //}
     }
 }

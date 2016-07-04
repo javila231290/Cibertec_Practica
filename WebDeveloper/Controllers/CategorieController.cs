@@ -14,9 +14,30 @@ namespace WebDeveloper.Controllers
 
         public FileContentResult GetImage(int id)
         {
-            var categorie = _categorie.GetCategorytById(id);
-            if (categorie != null) return File(categorie.Picture, categorie.PictureContentType);
-            else return null;
+            //var categorie = _categorie.GetCategorytById(id);
+            //if (categorie != null) return File(categorie.Picture, categorie.PictureContentType);
+            //else return null;
+            return (_categorie.GetCategorytById(id) != null) ? File(_categorie.GetCategorytById(id).Picture, _categorie.GetCategorytById(id).PictureContentType) : null;
+        }
+
+        private bool SaveChanges(Categories categorie, HttpPostedFileBase image, int state)
+        {
+            if (ModelState.IsValid)
+            {
+                if (image != null)
+                {
+                    categorie.PictureContentType = image.ContentType;
+                    categorie.PictureFileName = image.FileName;
+                    categorie.Picture = new byte[image.ContentLength];
+                    image.InputStream.Read(categorie.Picture, 0, image.ContentLength);
+                }
+                if (state == 0)
+                    _categorie.Add(categorie);
+                else
+                    _categorie.Update(categorie);
+                return true;
+            }
+            return false;
         }
 
         // GET: Categorie
@@ -32,20 +53,11 @@ namespace WebDeveloper.Controllers
         [HttpPost]
         public ActionResult Create(Categories categorie, HttpPostedFileBase image)
         {
-            if (ModelState.IsValid)
-            {
-                if(image != null)
-                {
-                    categorie.PictureContentType = image.ContentType;
-                    categorie.PictureFileName = image.FileName;
-                    categorie.Picture = new byte[image.ContentLength];
-                    image.InputStream.Read(categorie.Picture, 0, image.ContentLength);
-                }
-                _categorie.Add(categorie);
+            if (SaveChanges(categorie, image, 0))
                 return RedirectToAction("Index");
-            }
-            return View();
-        }
+            else
+                return View();
+        }        
 
         public ActionResult Edit(int? id=0)
         {
@@ -55,14 +67,12 @@ namespace WebDeveloper.Controllers
             return View(categorie);
         }
         [HttpPost]
-        public ActionResult Edit(Categories categories)
+        public ActionResult Edit(Categories categorie, HttpPostedFileBase image)
         {
-            if (ModelState.IsValid)
-            {
-                _categorie.Update(categories);
+            if (SaveChanges(categorie, image, 1))
                 return RedirectToAction("Index");
-            }
-            return View();
+            else
+                return View();
         }
 
         public ActionResult Delete(int id=0)
@@ -83,11 +93,6 @@ namespace WebDeveloper.Controllers
             return View();
         }
 
-        //public FileContentResult GetImage(int id)
-        //{
-        //    var categorie = _categorie.GetCategorytById(id);
-        //    if (categorie != null) return File(categorie.Picture, categorie.PictureMimeType);
-        //    else return null;
-        //}
+
     }
 }
